@@ -1,18 +1,25 @@
 const router = require('express').Router();
 const { Product, Category, Tag, ProductTag } = require('../../models');
 const sequelize = require('../../config/connection');
+const { Model } = require('sequelize');
 
-// The `/api/products` endpoint
 
 router.get('/', (req, res) => {
-  // be sure to include its associated Category and Tag data
+  // be sure to include its associated Tag data
   Product.findAll({
     attributes:[
       'id',
       'product_name',
       'price',
       'stock',
-      'tags'
+      //'tags',
+      'category_id'
+    ],
+    include:[
+      {
+        model:Category,
+        attributes:['id','category_name']
+      }
     ]
   })
   .then(dbProductData => res.json(dbProductData))
@@ -23,11 +30,25 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  // be sure to include its associated Category and Tag data
+  // be sure to include its associated Tag data
   Product.findOne({
     where:{
       id:req.params.id
-    }
+    },
+    attributes:[
+      'id',
+      'product_name',
+      'price',
+      'stock',
+      //'tags',
+      'category_id'
+    ],
+    include:[
+      {
+        model:Category,
+        attributes:['id', 'category_name']
+      }
+    ]
   })
   .then(dbProductData =>{
     if(!dbProductData){
@@ -42,12 +63,12 @@ router.get('/:id', (req, res) => {
   })
 });
 
-// create new product
 router.post('/', (req, res) => {
   Product.create({
     product_name:req.body.product_name,
     price:req.body.price,
-    stock:req.body.stock
+    stock:req.body.stock,
+    category_id:req.body.category_id
     //tagIds:req.body.tagIds
   })
   .then((product) => {
@@ -70,9 +91,7 @@ router.post('/', (req, res) => {
   });
 });
 
-// update product
 router.put('/:id', (req, res) => {
-  // update product data
   Product.update(req.body, {
     where: {
       id: req.params.id,
