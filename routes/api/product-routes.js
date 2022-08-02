@@ -12,13 +12,17 @@ router.get('/', (req, res) => {
       'product_name',
       'price',
       'stock',
-      //'tags',
       'category_id'
     ],
     include:[
       {
         model:Category,
         attributes:['id','category_name']
+      },
+      {
+        model:Tag,
+        as: 'tags',
+        attributes:['id', 'tag_name']
       }
     ]
   })
@@ -40,13 +44,16 @@ router.get('/:id', (req, res) => {
       'product_name',
       'price',
       'stock',
-      //'tags',
       'category_id'
     ],
     include:[
       {
         model:Category,
         attributes:['id', 'category_name']
+      },
+      {
+        model:Tag,
+        as: 'tags'
       }
     ]
   })
@@ -68,8 +75,8 @@ router.post('/', (req, res) => {
     product_name:req.body.product_name,
     price:req.body.price,
     stock:req.body.stock,
-    category_id:req.body.category_id
-    //tagIds:req.body.tagIds
+    category_id:req.body.category_id,
+    tagIds:req.body.tagIds
   })
   .then((product) => {
     // if there's product tags, we need to create pairings to bulk create in the ProductTag model
@@ -126,7 +133,7 @@ router.put('/:id', (req, res) => {
     })
     .then((updatedProductTags) => res.json(updatedProductTags))
     .catch((err) => {
-      // console.log(err);
+      console.log(err);
       res.status(400).json(err);
     });
 });
