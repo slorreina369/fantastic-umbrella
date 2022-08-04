@@ -26,7 +26,8 @@ Run seed with `npm run seed`
 
 # Images
 
-![Screencast](./assets/visuals/fantastic%20umbrella.mp4)
+https://user-images.githubusercontent.com/99361951/182772797-4d79bdae-27d3-48fb-a258-04efb2bef05a.mp4
+
 
 ## Contributing 
 
